@@ -1,6 +1,5 @@
 import { styled } from 'nativewind'
-import { ImageBackground } from 'react-native'
-import blurBg from '../src/assets/bg-blur.png'
+import { View } from 'react-native'
 import Stripes from '../src/assets/stripes.svg'
 import * as SecureStore from 'expo-secure-store'
 
@@ -38,13 +37,9 @@ export default function Layout() {
   }
 
   return (
-    <ImageBackground
-      source={blurBg}
-      className="relative flex-1 bg-gray-900"
-      imageStyle={{ position: 'absolute', left: '-100%' }}
-    >
+    <View className="relative flex-1 bg-white">
       <StyledStripes className="absolute left-2" />
-      <StatusBar style="light" translucent />
+      <StatusBar style="dark" translucent />
 
       <Stack
         screenOptions={{
@@ -54,11 +49,11 @@ export default function Layout() {
         }}
       >
         <Stack.Screen name="index" redirect={isUserAuthenticated} />
-        <Stack.Screen name="startReload" />
-        <Stack.Screen name="reload" />
         <Stack.Screen name="memories" />
+        <Stack.Screen name="reload" />
+        <Stack.Screen name="startReload" />
         <Stack.Screen name="new" />
       </Stack>
-    </ImageBackground>
+    </View>
   )
 }

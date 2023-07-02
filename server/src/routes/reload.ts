@@ -20,9 +20,10 @@ export async function reloadsRoutes(app: FastifyInstance) {
     return reloads.map((reload) => {
       return {
         id: reload.id,
-        energia: reload.kwh,
-        tempo: reload.time,
-        valor: reload.value,
+        kwh: reload.kwh,
+        time: reload.time,
+        value: reload.value,
+        createdAt: reload.createdAt,
       }
     })
   })
@@ -134,11 +135,12 @@ export async function reloadsRoutes(app: FastifyInstance) {
   app.post('/reload', async (request) => {
     const bodySchema = z.object({
       time: z.string(),
-      value: z.string(),
-      kwh: z.string(),
     })
 
-    const { time, value, kwh } = bodySchema.parse(request.body)
+    const { time } = bodySchema.parse(request.body)
+
+    const kwh = (parseFloat(time) * 10).toString()
+    const value = kwh
 
     const memory = await prisma.reload.create({
       data: {
@@ -151,4 +153,31 @@ export async function reloadsRoutes(app: FastifyInstance) {
 
     return memory
   })
+
+  // app.post('/client', async (request) => {
+  //   const bodySchema = z.object({
+  //     name: z.string(),
+  //     login: z.string(),
+  //     email: z.string(),
+  //     latitude: z.string(),
+  //     longitude: z.string(),
+  //     address: z.string(),
+  //   })
+
+  //   const { name, login, email, latitude, longitude, address } =
+  //     bodySchema.parse(request.body)
+
+  //   const memory = await prisma.client.create({
+  //     data: {
+  //       name,
+  //       login,
+  //       email,
+  //       latitude,
+  //       longitude,
+  //       address,
+  //     },
+  //   })
+
+  //   return memory
+  // })
 }

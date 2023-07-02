@@ -1,40 +1,45 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 
 import { useRouter } from 'expo-router'
-
 import Car from '../src/assets/car.png'
 import carLogo from '../src/assets/reload-logo.png'
 
-export default function App() {
+import * as SecureStore from 'expo-secure-store'
+import { api } from '../src/lib/api'
+
+export default function StartReload() {
   const router = useRouter()
   const [time, setTime] = useState('')
 
   async function handleStartReload() {
-    // const token = await SecureStore.getItemAsync('token')
+    const token = await SecureStore.getItemAsync('token')
 
-    // const coverUrl = 'testando'
-
-    // await api.post(
-    //   '/memories',
-    //   {
-    //     content,
-    //     isPublic,
-    //     coverUrl,
-    //   },
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   },
-    // )
+    await api.post(
+      '/reload',
+      {
+        time,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
 
     router.push('finishedReload')
   }
 
+  // async function calculatedReload(time: string) {
+  //   const tarifa = 0.5
+  //   const tanque = 50.0
+
+  //   return parseFloat(time) * tarifa * tanque
+  // }
+
   return (
     <View className="flex-1 items-center px-8 py-10">
-      <Image source={carLogo} style={{ width: 114, height: 65 }} alt="" />
+      <Image source={carLogo} alt="logo" style={{ width: 114, height: 65 }} />
       <View className="flex-1 items-center justify-center gap-6">
         <Image source={Car} alt="" />
 

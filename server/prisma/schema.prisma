@@ -35,5 +35,6 @@ model Client {
   login     String
   email     String
   latitude  String
-  Longitude String
+  longitude String
+  address   String
 }

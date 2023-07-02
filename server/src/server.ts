@@ -6,6 +6,7 @@ import jwt from '@fastify/jwt'
 import multipart from '@fastify/multipart'
 import { reloadsRoutes } from './routes/reload'
 import { authRoutes } from './routes/auth'
+import { clientRoutes } from './routes/client'
 
 const app = fastity()
 
@@ -21,6 +22,7 @@ app.register(jwt, {
 
 app.register(reloadsRoutes)
 app.register(authRoutes)
+app.register(clientRoutes)
 
 app
   .listen({
