@@ -1,34 +1,8 @@
-import 'dotenv/config'
+import { buildApp } from './app.ts'
+import { env } from './env.ts'
 
-import fastity from 'fastify'
-import cors from '@fastify/cors'
-import jwt from '@fastify/jwt'
-import multipart from '@fastify/multipart'
-import { reloadsRoutes } from './routes/reload'
-import { authRoutes } from './routes/auth'
-import { clientRoutes } from './routes/client'
+const app = buildApp()
 
-const app = fastity()
+await app.listen({ port: env.PORT, host: '0.0.0.0' })
 
-app.register(multipart)
-
-app.register(cors, {
-  origin: true,
-})
-
-app.register(jwt, {
-  secret: 'spacetime',
-})
-
-app.register(reloadsRoutes)
-app.register(authRoutes)
-app.register(clientRoutes)
-
-app
-  .listen({
-    port: 3333,
-    host: '0.0.0.0',
-  })
-  .then(() => {
-    console.log('HTTP server running on http:localhost:3333')
-  })
+console.log(`HTTP server running on http://localhost:${env.PORT} (docs at /docs)`)
