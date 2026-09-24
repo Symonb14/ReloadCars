@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@import "uniwind";
+
+@theme {
+  /* Botão principal e destaques (verde do MVP) */
+  --color-brand: #22c55e;
+  --color-brand-pressed: #16a34a;
+  /* Verde-limão do logo */
+  --color-leaf: #8cd23c;
+  /* Textos e botão secundário */
+  --color-ink: #111827;
+  --color-muted: #6b7280;
+  /* Fundo das telas e dos campos */
+  --color-surface: #f4f4f5;
+  --color-field: #e4e4e7;
+  --color-danger: #ef4444;
+}
