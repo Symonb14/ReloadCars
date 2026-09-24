@@ -32,6 +32,7 @@ Node.js no Firewall do Windows (redes privadas) para as portas 8081 (Metro) e 33
 | `npm start` | Servidor de desenvolvimento do Expo |
 | `npm run lint` / `npm run format` | Verifica / corrige com Biome |
 | `npm run typecheck` | Checa os tipos |
+| `npm run api` | Regenera os hooks da API em `src/api/generated` a partir de `../server/openapi.json` (rode `npm run openapi` no server antes) |
 | `npm run doctor` | Diagnostica dependências e configuração do Expo |
 
 Instale pacotes com `npx expo install <pacote>`, que escolhe versões compatíveis com o SDK.

@@ -27,6 +27,16 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
         <Stack.Protected guard={isSignedIn}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen
+            name="charge-point/[id]"
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: [0.6, 0.95],
+              sheetGrabberVisible: true,
+              sheetCornerRadius: 24,
+              animation: 'default',
+            }}
+          />
         </Stack.Protected>
 
         <Stack.Protected guard={!isSignedIn}>

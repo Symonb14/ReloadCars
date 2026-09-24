@@ -32,6 +32,12 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 160
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "O ReloadCars usa sua localização para mostrar os pontos de recarga perto de você e traçar a rota até eles."
+        }
       ]
     ],
     "experiments": {

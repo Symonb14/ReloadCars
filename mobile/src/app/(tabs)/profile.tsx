@@ -1,25 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { ActivityIndicator, Alert, Text, View } from 'react-native'
 import { z } from 'zod'
+import { getGetMeQueryKey, useGetMe } from '@/api/generated/profile/profile'
 import { Button } from '@/components/button'
 import { FormError } from '@/components/form-error'
 import { Logo } from '@/components/logo'
 import { Screen } from '@/components/screen'
 import { TextField } from '@/components/text-field'
-import { api } from '@/lib/api'
 import { authClient } from '@/lib/auth-client'
 import { authErrorMessage } from '@/lib/auth-errors'
-
-type Me = {
-  id: string
-  name: string
-  email: string
-  role: 'driver' | 'admin'
-  createdAt: string
-}
 
 const nameSchema = z.object({
   name: z.string().trim().min(2, 'Informe seu nome completo.'),
@@ -38,7 +30,7 @@ const passwordSchema = z
 
 export default function ProfileScreen() {
   const queryClient = useQueryClient()
-  const me = useQuery({ queryKey: ['me'], queryFn: () => api<Me>('/me') })
+  const me = useGetMe()
 
   if (me.isPending) {
     return (
@@ -76,7 +68,7 @@ export default function ProfileScreen() {
       <View className="gap-10">
         <EditNameForm
           currentName={me.data.name}
-          onSaved={() => queryClient.invalidateQueries({ queryKey: ['me'] })}
+          onSaved={() => queryClient.invalidateQueries({ queryKey: getGetMeQueryKey() })}
         />
         <ChangePasswordForm />
         <Button
