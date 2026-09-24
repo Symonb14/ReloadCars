@@ -10,6 +10,7 @@ import { sql } from 'drizzle-orm'
 import { db } from '../db/client.ts'
 import { chargePoint } from '../db/schema/index.ts'
 import { env } from '../env.ts'
+import { type OcmPoi, toChargePoint } from '../lib/open-charge-map.ts'
 
 const BETIM = { lat: '-19.9678', lng: '-44.1983' }
 
@@ -71,66 +72,3 @@ console.log(
   `Open Charge Map: ${rows.length} pontos importados/atualizados (${pois.length - rows.length} ignorados). Total de pontos públicos: ${total}.`,
 )
 process.exit(0)
-
-function toChargePoint(poi: OcmPoi): typeof chargePoint.$inferInsert | null {
-  const info = poi.AddressInfo
-  if (!info || typeof info.Latitude !== 'number' || typeof info.Longitude !== 'number') {
-    return null
-  }
-
-  const connections = poi.Connections ?? []
-  const powers = connections.map((c) => c.PowerKW).filter((p) => typeof p === 'number')
-  const connectors = [
-    ...new Set(connections.map((c) => c.ConnectionType?.Title).filter(Boolean)),
-  ] as string[]
-
-  const provider = poi.DataProvider?.Title
-  const attribution = [
-    'Dados: Open Charge Map (CC BY 4.0)',
-    provider && !/open charge map/i.test(provider) ? `fonte original: ${provider}` : null,
-  ]
-    .filter(Boolean)
-    .join(', ')
-
-  const description = [
-    poi.UsageCost ? `Custo informado: ${poi.UsageCost}.` : null,
-    poi.GeneralComments ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ')
-
-  return {
-    source: 'ocm',
-    externalId: String(poi.ID),
-    name: info.Title?.trim() || 'Ponto de recarga',
-    description: description || null,
-    address:
-      [info.AddressLine1, info.Town, info.StateOrProvince].filter(Boolean).join(', ') ||
-      null,
-    location: { latitude: info.Latitude, longitude: info.Longitude },
-    powerKw: powers.length ? Math.max(...powers) : null,
-    pricePerKwhCents: null,
-    connectors,
-    openingHours: info.AccessComments ?? null,
-    attribution,
-    active: poi.StatusType?.IsOperational !== false,
-  }
-}
-
-type OcmPoi = {
-  ID: number
-  UsageCost?: string
-  GeneralComments?: string
-  DataProvider?: { Title?: string }
-  StatusType?: { IsOperational?: boolean }
-  AddressInfo?: {
-    Title?: string
-    AddressLine1?: string
-    Town?: string
-    StateOrProvince?: string
-    AccessComments?: string
-    Latitude?: number
-    Longitude?: number
-  }
-  Connections?: { PowerKW?: number; ConnectionType?: { Title?: string } }[]
-}
