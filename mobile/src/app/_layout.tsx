@@ -37,6 +37,10 @@ export default function RootLayout() {
               animation: 'default',
             }}
           />
+          <Stack.Screen
+            name="search"
+            options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+          />
         </Stack.Protected>
 
         <Stack.Protected guard={!isSignedIn}>

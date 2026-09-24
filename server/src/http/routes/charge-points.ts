@@ -1,27 +1,16 @@
-import { and, eq, or, type SQL, sql } from 'drizzle-orm'
+import { and, eq, type SQL, sql } from 'drizzle-orm'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { db } from '../../db/client.ts'
-import { chargePoint, chargePointSources, partner } from '../../db/schema/index.ts'
-import type { Point } from '../../db/schema/point.ts'
+import { chargePoint, partner } from '../../db/schema/index.ts'
+import {
+  chargePointColumns,
+  chargePointSchema,
+  isListed,
+  toChargePointResponse,
+} from '../charge-point-response.ts'
 import { requireAuth } from '../require-auth.ts'
 import { latitude, longitude } from '../schemas.ts'
-
-const chargePointSchema = z.object({
-  id: z.string(),
-  source: z.enum(chargePointSources),
-  name: z.string(),
-  description: z.string().nullable(),
-  address: z.string().nullable(),
-  latitude: z.number(),
-  longitude: z.number(),
-  powerKw: z.number().nullable(),
-  pricePerKwhCents: z.number().int().nullable(),
-  connectors: z.array(z.string()),
-  openingHours: z.string().nullable(),
-  attribution: z.string().nullable(),
-  partnerName: z.string().nullable(),
-})
 
 const nearbyChargePointSchema = chargePointSchema.extend({
   distanceMeters: z.number().int(),
@@ -30,32 +19,6 @@ const nearbyChargePointSchema = chargePointSchema.extend({
 const notFoundSchema = z.object({ message: z.string() })
 
 const MAX_RESULTS = 200
-
-/** Active points whose partner (if any) is also active. */
-const isListed = and(
-  eq(chargePoint.active, true),
-  or(eq(chargePoint.source, 'ocm'), eq(partner.active, true)),
-)
-
-const columns = {
-  id: chargePoint.id,
-  source: chargePoint.source,
-  name: chargePoint.name,
-  description: chargePoint.description,
-  address: chargePoint.address,
-  location: chargePoint.location,
-  powerKw: chargePoint.powerKw,
-  pricePerKwhCents: chargePoint.pricePerKwhCents,
-  connectors: chargePoint.connectors,
-  openingHours: chargePoint.openingHours,
-  attribution: chargePoint.attribution,
-  partnerName: partner.name,
-}
-
-/** Flattens the PostGIS point into latitude/longitude fields. */
-function toResponse<T extends { location: Point }>({ location, ...row }: T) {
-  return { ...row, latitude: location.latitude, longitude: location.longitude }
-}
 
 export const chargePointRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
@@ -80,7 +43,10 @@ export const chargePointRoutes: FastifyPluginAsyncZod = async (app) => {
       const distance: SQL<number> = sql`ST_Distance(${chargePoint.location}::geography, ${origin})`
 
       const rows = await db
-        .select({ ...columns, distanceMeters: sql<number>`round(${distance})::int` })
+        .select({
+          ...chargePointColumns,
+          distanceMeters: sql<number>`round(${distance})::int`,
+        })
         .from(chargePoint)
         .leftJoin(partner, eq(partner.id, chargePoint.partnerId))
         .where(
@@ -92,7 +58,7 @@ export const chargePointRoutes: FastifyPluginAsyncZod = async (app) => {
         .orderBy(distance)
         .limit(MAX_RESULTS)
 
-      return { chargePoints: rows.map(toResponse) }
+      return { chargePoints: rows.map(toChargePointResponse) }
     },
   )
 
@@ -110,14 +76,14 @@ export const chargePointRoutes: FastifyPluginAsyncZod = async (app) => {
     },
     async (request, reply) => {
       const [row] = await db
-        .select(columns)
+        .select(chargePointColumns)
         .from(chargePoint)
         .leftJoin(partner, eq(partner.id, chargePoint.partnerId))
         .where(and(isListed, eq(chargePoint.id, request.params.id)))
 
       if (!row) return reply.status(404).send({ message: 'Charge point not found' })
 
-      return toResponse(row)
+      return toChargePointResponse(row)
     },
   )
 }

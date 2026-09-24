@@ -1,11 +1,20 @@
 import { create } from 'zustand'
 
-export type RouteDestination = {
+type Target = {
   id: string
   name: string
   latitude: number
   longitude: number
 }
+
+/**
+ * What the map is routing to:
+ * - `charge-point`: "Ver rota" in the details sheet (route to that point);
+ * - `place`: a searched destination (trip mode, with the points along the way).
+ */
+export type RouteDestination =
+  | (Target & { kind: 'charge-point' })
+  | (Target & { kind: 'place'; address: string | null })
 
 type RouteDestinationStore = {
   destination: RouteDestination | null
@@ -13,7 +22,6 @@ type RouteDestinationStore = {
   clear: () => void
 }
 
-/** Charge point whose route the map should draw ("Ver rota" in the details sheet). */
 export const useRouteDestination = create<RouteDestinationStore>((set) => ({
   destination: null,
   setDestination: (destination) => set({ destination }),

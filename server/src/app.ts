@@ -15,6 +15,8 @@ import { chargePointRoutes } from './http/routes/charge-points.ts'
 import { directionsRoutes } from './http/routes/directions.ts'
 import { healthRoutes } from './http/routes/health.ts'
 import { meRoutes } from './http/routes/me.ts'
+import { placesRoutes } from './http/routes/places.ts'
+import { tripsRoutes } from './http/routes/trips.ts'
 
 export function buildApp() {
   const app = fastify({
@@ -68,6 +70,8 @@ export function buildApp() {
   app.register(meRoutes)
   app.register(chargePointRoutes)
   app.register(directionsRoutes)
+  app.register(placesRoutes)
+  app.register(tripsRoutes)
 
   return app
 }

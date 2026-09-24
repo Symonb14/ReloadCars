@@ -11,9 +11,11 @@ import { useRouteDestination } from '@/stores/route-destination'
 
 export default function ChargePointSheet() {
   const router = useRouter()
-  const { id, distanceMeters } = useLocalSearchParams<{
+  // distanceMeters: straight-line distance (nearby); note: position on a trip.
+  const { id, distanceMeters, note } = useLocalSearchParams<{
     id: string
     distanceMeters?: string
+    note?: string
   }>()
   const point = useGetChargePoint(id)
   const setDestination = useRouteDestination((state) => state.setDestination)
@@ -38,6 +40,7 @@ export default function ChargePointSheet() {
   const data = point.data
   const isPartner = data.source === 'partner'
   const destination = {
+    kind: 'charge-point' as const,
     id: data.id,
     name: data.name,
     latitude: data.latitude,
@@ -60,7 +63,9 @@ export default function ChargePointSheet() {
         {data.address ? (
           <Text className="text-base text-muted">{data.address}</Text>
         ) : null}
-        {distanceMeters ? (
+        {note ? (
+          <Text className="text-sm font-semibold text-brand-pressed">{note}</Text>
+        ) : distanceMeters ? (
           <Text className="text-sm font-semibold text-brand-pressed">
             A {formatDistance(Number(distanceMeters))} em linha reta
           </Text>
