@@ -14,4 +14,14 @@ export type AdminListChargePointsParams = {
    * @maxLength 100
    */
   q?: string
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  page?: number
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  pageSize?: number
 }

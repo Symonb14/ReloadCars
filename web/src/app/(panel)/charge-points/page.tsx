@@ -1,7 +1,9 @@
 'use client'
 
-import { useQueryClient } from '@tanstack/react-query'
+import { keepPreviousData, useQueryClient } from '@tanstack/react-query'
 import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
   EyeIcon,
   EyeOffIcon,
   LockIcon,
@@ -68,6 +70,7 @@ type ChargePoint = AdminListChargePoints200ChargePointsItem
 type SourceFilter = 'all' | AdminListChargePointsSource
 
 const ALL_PARTNERS = 'all'
+const PAGE_SIZE = 50
 
 export default function ChargePointsPage() {
   // useSearchParams needs a Suspense boundary in the App Router.
@@ -94,12 +97,24 @@ function ChargePointsList() {
     return () => clearTimeout(timeout)
   }, [search])
 
+  // The page belongs to one set of filters: changing a filter goes back to page 1.
+  const filtersKey = [source, partnerId, debouncedSearch].join('|')
+  const [pagination, setPagination] = useState({ filtersKey, page: 1 })
+  const page = pagination.filtersKey === filtersKey ? pagination.page : 1
+  const goToPage = (next: number) => setPagination({ filtersKey, page: next })
+
   const partners = useAdminListPartners()
-  const chargePoints = useAdminListChargePoints({
-    ...(source !== 'all' ? { source } : {}),
-    ...(partnerId !== ALL_PARTNERS ? { partnerId } : {}),
-    ...(debouncedSearch ? { q: debouncedSearch } : {}),
-  })
+  const chargePoints = useAdminListChargePoints(
+    {
+      ...(source !== 'all' ? { source } : {}),
+      ...(partnerId !== ALL_PARTNERS ? { partnerId } : {}),
+      ...(debouncedSearch ? { q: debouncedSearch } : {}),
+      page,
+      pageSize: PAGE_SIZE,
+    },
+    // Keep the current page on screen while the next one loads.
+    { query: { placeholderData: keepPreviousData } },
+  )
   const updateChargePoint = useAdminUpdateChargePoint()
   const deleteChargePoint = useAdminDeleteChargePoint()
 
@@ -298,6 +313,15 @@ function ChargePointsList() {
             </TableBody>
           </Table>
         )}
+        {chargePoints.data && chargePoints.data.total > 0 ? (
+          <PaginationFooter
+            page={page}
+            pageSize={PAGE_SIZE}
+            total={chargePoints.data.total}
+            loading={chargePoints.isPlaceholderData}
+            onPageChange={goToPage}
+          />
+        ) : null}
       </Card>
 
       <AlertDialog
@@ -343,6 +367,56 @@ function ConnectorBadges({ connectors }: { connectors: string[] }) {
           +{hidden}
         </Badge>
       ) : null}
+    </div>
+  )
+}
+
+function PaginationFooter({
+  page,
+  pageSize,
+  total,
+  loading,
+  onPageChange,
+}: {
+  page: number
+  pageSize: number
+  total: number
+  loading: boolean
+  onPageChange: (page: number) => void
+}) {
+  const lastPage = Math.max(1, Math.ceil(total / pageSize))
+  const first = (page - 1) * pageSize + 1
+  const last = Math.min(page * pageSize, total)
+
+  return (
+    <div className="flex items-center justify-between gap-4 border-t px-6 py-3">
+      <p className="text-muted-foreground text-sm">
+        {first.toLocaleString('pt-BR')}–{last.toLocaleString('pt-BR')} de{' '}
+        {total.toLocaleString('pt-BR')} pontos
+      </p>
+      <div className="flex items-center gap-2">
+        <span className="text-muted-foreground text-sm">
+          Página {page} de {lastPage}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={page <= 1 || loading}
+          onClick={() => onPageChange(page - 1)}
+        >
+          <ChevronLeftIcon />
+          Anterior
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={page >= lastPage || loading}
+          onClick={() => onPageChange(page + 1)}
+        >
+          Próxima
+          <ChevronRightIcon />
+        </Button>
+      </div>
     </div>
   )
 }

@@ -9,4 +9,19 @@ import type { AdminListChargePoints200ChargePointsItem } from './adminListCharge
 
 export type AdminListChargePoints200 = {
   chargePoints: AdminListChargePoints200ChargePointsItem[]
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  total: number
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  page: number
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  pageSize: number
 }

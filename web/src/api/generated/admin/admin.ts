@@ -795,7 +795,7 @@ export const getAdminListChargePointsUrl = (params?: AdminListChargePointsParams
 }
 
 /**
- * @summary Lista todos os pontos (parceiros e públicos), com filtros
+ * @summary Lista os pontos (parceiros primeiro, depois públicos), com filtros e paginação
  */
 export const adminListChargePoints = async (
   params?: AdminListChargePointsParams,
@@ -901,7 +901,7 @@ export function useAdminListChargePoints<
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Lista todos os pontos (parceiros e públicos), com filtros
+ * @summary Lista os pontos (parceiros primeiro, depois públicos), com filtros e paginação
  */
 
 export function useAdminListChargePoints<
