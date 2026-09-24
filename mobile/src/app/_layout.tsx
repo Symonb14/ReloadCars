@@ -37,6 +37,15 @@ export default function RootLayout() {
               animation: 'default',
             }}
           />
+          <Stack.Screen name="reloads/new" options={{ animation: 'slide_from_right' }} />
+          <Stack.Screen
+            name="reloads/select-point"
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="reloads/summary"
+            options={{ animation: 'fade', gestureEnabled: false }}
+          />
           <Stack.Screen
             name="search"
             options={{ presentation: 'modal', animation: 'slide_from_bottom' }}

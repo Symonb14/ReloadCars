@@ -15,7 +15,7 @@ export default defineConfig({
       override: {
         mutator: { path: 'src/api/fetcher.ts', name: 'fetcher' },
         fetch: { includeHttpResponseReturnType: false },
-        query: { useQuery: true, signal: true },
+        query: { signal: true },
       },
     },
     hooks: { afterAllFilesWrite: 'biome check --write' },

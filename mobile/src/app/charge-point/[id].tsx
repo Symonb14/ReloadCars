@@ -7,6 +7,7 @@ import { Button } from '@/components/button'
 import { FormError } from '@/components/form-error'
 import { formatDistance, formatPower, formatPricePerKwh } from '@/lib/format'
 import { chooseNavigationApp } from '@/lib/navigation-apps'
+import { useReloadDraft } from '@/stores/reload-draft'
 import { useRouteDestination } from '@/stores/route-destination'
 
 export default function ChargePointSheet() {
@@ -19,6 +20,7 @@ export default function ChargePointSheet() {
   }>()
   const point = useGetChargePoint(id)
   const setDestination = useRouteDestination((state) => state.setDestination)
+  const setDraftChargePoint = useReloadDraft((state) => state.setChargePoint)
 
   if (point.isPending) {
     return (
@@ -109,6 +111,14 @@ export default function ChargePointSheet() {
           title="Como chegar"
           variant="secondary"
           onPress={() => chooseNavigationApp(destination)}
+        />
+        <Button
+          title="Registrar recarga aqui"
+          variant="secondary"
+          onPress={() => {
+            setDraftChargePoint(data)
+            router.replace('/reloads/new')
+          }}
         />
       </View>
 
