@@ -1870,7 +1870,7 @@
     "/admin/charge-points": {
       "get": {
         "operationId": "adminListChargePoints",
-        "summary": "Lista todos os pontos (parceiros e públicos), com filtros",
+        "summary": "Lista os pontos (parceiros primeiro, depois públicos), com filtros e paginação",
         "tags": [
           "admin"
         ],
@@ -1902,6 +1902,28 @@
             },
             "in": "query",
             "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "in": "query",
+            "name": "page",
+            "required": false
+          },
+          {
+            "schema": {
+              "default": 50,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "in": "query",
+            "name": "pageSize",
             "required": false
           }
         ],
@@ -2000,10 +2022,28 @@
                         ],
                         "additionalProperties": false
                       }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "page": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "pageSize": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
                     }
                   },
                   "required": [
-                    "chargePoints"
+                    "chargePoints",
+                    "total",
+                    "page",
+                    "pageSize"
                   ],
                   "additionalProperties": false
                 }

@@ -81,31 +81,56 @@ export const adminChargePointRoutes: FastifyPluginAsyncZod = async (app) => {
       schema: {
         tags: ['admin'],
         operationId: 'adminListChargePoints',
-        summary: 'Lista todos os pontos (parceiros e públicos), com filtros',
+        summary:
+          'Lista os pontos (parceiros primeiro, depois públicos), com filtros e paginação',
         querystring: z.object({
           source: z.enum(chargePointSources).optional(),
           partnerId: z.string().optional(),
           q: z.string().trim().max(100).optional(),
+          page: z.coerce.number().int().min(1).default(1),
+          pageSize: z.coerce.number().int().min(1).max(100).default(50),
         }),
-        response: { 200: z.object({ chargePoints: z.array(adminChargePointSchema) }) },
+        response: {
+          200: z.object({
+            chargePoints: z.array(adminChargePointSchema),
+            total: z.number().int(),
+            page: z.number().int(),
+            pageSize: z.number().int(),
+          }),
+        },
       },
     },
     async (request) => {
-      const { source, partnerId, q } = request.query
+      const { source, partnerId, q, page, pageSize } = request.query
       const filters: SQL[] = []
       if (source) filters.push(eq(chargePoint.source, source))
       if (partnerId) filters.push(eq(chargePoint.partnerId, partnerId))
       if (q) filters.push(ilike(chargePoint.name, `%${q}%`))
 
-      const rows = await db
-        .select(adminColumns)
-        .from(chargePoint)
-        .leftJoin(partner, eq(partner.id, chargePoint.partnerId))
-        .where(and(...filters))
-        .orderBy(desc(sql`${chargePoint.source} = 'partner'`), asc(chargePoint.name))
-        .limit(1000)
+      const where = and(...filters)
+      const [rows, [count]] = await Promise.all([
+        db
+          .select(adminColumns)
+          .from(chargePoint)
+          .leftJoin(partner, eq(partner.id, chargePoint.partnerId))
+          .where(where)
+          // id breaks ties so pages never repeat or skip points with the same name.
+          .orderBy(
+            desc(sql`${chargePoint.source} = 'partner'`),
+            asc(chargePoint.name),
+            asc(chargePoint.id),
+          )
+          .limit(pageSize)
+          .offset((page - 1) * pageSize),
+        db.select({ total: sql<number>`count(*)::int` }).from(chargePoint).where(where),
+      ])
 
-      return { chargePoints: rows.map(toChargePointResponse) }
+      return {
+        chargePoints: rows.map(toChargePointResponse),
+        total: count?.total ?? 0,
+        page,
+        pageSize,
+      }
     },
   )
 

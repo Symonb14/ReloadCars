@@ -258,6 +258,38 @@ describe('charge points (RF14)', () => {
     expect(search.chargePoints).toMatchObject([{ name: 'Posto Novo', active: false }])
   })
 
+  it('paginates with the total, partners first and no repeats between pages', async () => {
+    const { id: partnerId } = await createPartner()
+    await call('POST', '/admin/charge-points', {
+      ...validPoint,
+      partnerId,
+      name: 'Z Parceiro',
+    })
+    await db.insert(chargePoint).values(
+      ['B', 'A', 'C'].map((letter) => ({
+        source: 'ocm' as const,
+        externalId: letter,
+        name: `Público ${letter}`,
+        location,
+      })),
+    )
+
+    const names = async (page: number) => {
+      const body = (
+        await call('GET', `/admin/charge-points?pageSize=2&page=${page}`)
+      ).json()
+      expect(body).toMatchObject({ total: 4, page, pageSize: 2 })
+      return body.chargePoints.map((p: { name: string }) => p.name)
+    }
+
+    expect(await names(1)).toEqual(['Z Parceiro', 'Público A'])
+    expect(await names(2)).toEqual(['Público B', 'Público C'])
+    expect(await names(3)).toEqual([])
+
+    const tooBig = await call('GET', '/admin/charge-points?pageSize=101')
+    expect(tooBig.statusCode).toBe(400)
+  })
+
   it('protects public points from edits and deletion', async () => {
     const [publicPoint] = await db
       .insert(chargePoint)

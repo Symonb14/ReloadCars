@@ -54,7 +54,9 @@ export function formatAddress(...parts: (string | undefined)[]): string | null {
 }
 
 /** Maps a POI to a charge point row, or null when it has no coordinates. */
-export function toChargePoint(poi: OcmPoi): typeof chargePoint.$inferInsert | null {
+export function toChargePoint(
+  poi: OcmPoi,
+): (typeof chargePoint.$inferInsert & { externalId: string }) | null {
   const info = poi.AddressInfo
   if (!info || typeof info.Latitude !== 'number' || typeof info.Longitude !== 'number') {
     return null
