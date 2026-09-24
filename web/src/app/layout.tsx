@@ -1,30 +1,32 @@
-import { ReactNode } from 'react'
+import type { Metadata } from 'next'
+import { Geist_Mono, Inter } from 'next/font/google'
+import { Providers } from './providers'
 import './globals.css'
-import {
-  Roboto_Flex as Roboto,
-  Bai_Jamjuree as BaiJamjuree,
-} from 'next/font/google'
 
-const roboto = Roboto({ subsets: ['latin'], variable: '--font-roboto' })
-const baiJamjuree = BaiJamjuree({
+const inter = Inter({
+  variable: '--font-sans',
   subsets: ['latin'],
-  weight: '700',
-  variable: '--font-bai-jamjuree',
 })
 
-export const metadata = {
-  title: 'NLW Spacetime',
-  description:
-    'Uma cápsula do tempo construída com React, Next.js, TailwindCSS e Typescript.',
+// Only for tabular values (CNPJ, coordinates).
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
+
+export const metadata: Metadata = {
+  title: { default: 'ReloadCars Admin', template: '%s · ReloadCars Admin' },
+  description: 'Painel de parceiros e pontos de recarga do ReloadCars.',
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en">
-      <body
-        className={`${roboto.variable} ${baiJamjuree.variable} bg-gray-900 font-sans text-gray-100`}
-      >
-        {children}
+    <html
+      lang="pt-BR"
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="flex min-h-full flex-col bg-background">
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

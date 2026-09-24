@@ -1,31 +1,47 @@
 {
-  "name": "web",
+  "name": "@reloadcars/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/copy-maplibre-worker.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/copy-maplibre-worker.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "biome check",
+    "format": "biome check --write",
+    "typecheck": "tsc --noEmit",
+    "api": "orval"
   },
   "dependencies": {
-    "@types/node": "20.1.7",
-    "@types/react": "18.2.6",
-    "@types/react-dom": "18.2.4",
-    "autoprefixer": "10.4.14",
-    "axios": "^1.4.0",
-    "eslint": "8.40.0",
-    "eslint-config-next": "13.4.2",
-    "lucide-react": "^0.220.0",
-    "next": "13.4.2",
-    "postcss": "8.4.23",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tailwindcss": "3.3.2",
-    "typescript": "5.0.4"
+    "@base-ui/react": "^1.8.0",
+    "@hookform/resolvers": "^5.9.1",
+    "@tanstack/react-query": "^5.103.2",
+    "better-auth": "^1.7.6",
+    "class-variance-authority": "^0.7.1",
+    "cn": "^0.4.0",
+    "lucide-react": "^1.48.0",
+    "maplibre-gl": "^6.11.2",
+    "next": "16.3.6",
+    "next-themes": "^0.4.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-hook-form": "^7.88.0",
+    "react-map-gl": "^8.1.3",
+    "shadcn": "^4.21.0",
+    "sonner": "^2.0.8",
+    "tw-animate-css": "^1.4.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@rocketseat/eslint-config": "^1.2.0",
-    "prettier-plugin-tailwindcss": "^0.3.0"
+    "@biomejs/biome": "2.5.14",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "1.0.0",
+    "orval": "8.37.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
