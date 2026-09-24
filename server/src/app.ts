@@ -11,6 +11,8 @@ import {
 } from 'fastify-type-provider-zod'
 import { env } from './env.ts'
 import { authRoutes } from './http/routes/auth.ts'
+import { chargePointRoutes } from './http/routes/charge-points.ts'
+import { directionsRoutes } from './http/routes/directions.ts'
 import { healthRoutes } from './http/routes/health.ts'
 import { meRoutes } from './http/routes/me.ts'
 
@@ -64,6 +66,8 @@ export function buildApp() {
   app.register(healthRoutes)
   app.register(authRoutes)
   app.register(meRoutes)
+  app.register(chargePointRoutes)
+  app.register(directionsRoutes)
 
   return app
 }

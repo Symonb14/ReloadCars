@@ -10,6 +10,7 @@ export const meRoutes: FastifyPluginAsyncZod = async (app) => {
       preHandler: requireAuth(),
       schema: {
         tags: ['profile'],
+        operationId: 'getMe',
         summary: 'Perfil do usuário logado (RF03)',
         response: {
           200: z.object({

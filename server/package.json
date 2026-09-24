@@ -19,7 +19,10 @@
     "create-admin": "node --env-file=.env src/scripts/create-admin.ts",
     "pretest": "dotenv -e .env.test -- drizzle-kit migrate",
     "test": "dotenv -e .env.test -- vitest run",
-    "test:watch": "dotenv -e .env.test -- vitest"
+    "test:watch": "dotenv -e .env.test -- vitest",
+    "db:seed": "node --env-file=.env src/db/seed.ts",
+    "import:ocm": "node --env-file=.env src/scripts/import-ocm.ts",
+    "openapi": "node --env-file=.env src/scripts/export-openapi.ts"
   },
   "dependencies": {
     "@better-auth/expo": "1.7.5",

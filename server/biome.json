@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!src/db/migrations"]
+    "includes": ["**", "!src/db/migrations", "!openapi.json"]
   },
   "formatter": {
     "indentStyle": "space",

@@ -10,6 +10,9 @@ const envSchema = z.object({
   MOBILE_SCHEME: z
     .string()
     .regex(/^[a-z][a-z0-9+.-]*:\/\/$/, 'expected e.g. reloadcars://'),
+  MAPBOX_ACCESS_TOKEN: z.string().min(1),
+  // Only needed by `npm run import:ocm`.
+  OCM_API_KEY: z.string().optional(),
 })
 
 export const env = envSchema.parse(process.env)
