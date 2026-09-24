@@ -993,6 +993,323 @@
           }
         }
       }
+    },
+    "/reloads": {
+      "post": {
+        "operationId": "createReload",
+        "summary": "Registra uma recarga com energia e valor calculados (RF11, RF06)",
+        "tags": [
+          "reloads"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "chargePointId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "durationMinutes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1440
+                  },
+                  "energyKwh": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 500
+                  },
+                  "pricePerKwhCents": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000
+                  }
+                },
+                "required": [
+                  "chargePointId",
+                  "durationMinutes"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "chargePointId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "chargePointName": {
+                      "type": "string"
+                    },
+                    "chargePointAddress": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "chargedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "durationMinutes": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "energyKwh": {
+                      "type": "number"
+                    },
+                    "energyEstimated": {
+                      "type": "boolean"
+                    },
+                    "pricePerKwhCents": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "totalCents": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "chargePointId",
+                    "chargePointName",
+                    "chargePointAddress",
+                    "chargedAt",
+                    "durationMinutes",
+                    "energyKwh",
+                    "energyEstimated",
+                    "pricePerKwhCents",
+                    "totalCents"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getReloads",
+        "summary": "Histórico de recargas e resumo do mês (RF12)",
+        "tags": [
+          "reloads"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reloads": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "chargePointId": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "chargePointName": {
+                            "type": "string"
+                          },
+                          "chargePointAddress": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "chargedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "durationMinutes": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "energyKwh": {
+                            "type": "number"
+                          },
+                          "energyEstimated": {
+                            "type": "boolean"
+                          },
+                          "pricePerKwhCents": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "totalCents": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "chargePointId",
+                          "chargePointName",
+                          "chargePointAddress",
+                          "chargedAt",
+                          "durationMinutes",
+                          "energyKwh",
+                          "energyEstimated",
+                          "pricePerKwhCents",
+                          "totalCents"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "month": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "energyKwh": {
+                          "type": "number"
+                        },
+                        "totalCents": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "count",
+                        "energyKwh",
+                        "totalCents"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "reloads",
+                    "month"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reloads/{id}": {
+      "delete": {
+        "operationId": "deleteReload",
+        "summary": "Exclui uma recarga do próprio histórico",
+        "tags": [
+          "reloads"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true,
+                  "enum": [
+                    null
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

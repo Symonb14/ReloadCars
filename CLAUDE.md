@@ -25,4 +25,5 @@ Os tipos compartilhados vêm do OpenAPI gerado pela API; não há pacote compart
 - Dinheiro em centavos (inteiro); energia em `numeric`; coordenadas como PostGIS
   `geometry(Point, 4326)`.
 - Segredos só em `.env` (nunca versionado); cada projeto mantém um `.env.example`.
-- Commit e push apenas quando o usuário pedir.
+- Commit e push apenas quando o usuário pedir, e nunca antes de ele validar a etapa
+  visualmente no celular (testes automáticos passando não bastam).

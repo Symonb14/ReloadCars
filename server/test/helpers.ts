@@ -5,7 +5,7 @@ import { db } from '../src/db/client.ts'
 
 export async function resetDatabase() {
   await db.execute(
-    sql`truncate table "user", "session", "account", "verification", "partner", "charge_point" cascade`,
+    sql`truncate table "user", "session", "account", "verification", "partner", "charge_point", "reload" cascade`,
   )
 }
 

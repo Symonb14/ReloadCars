@@ -16,6 +16,7 @@ import { directionsRoutes } from './http/routes/directions.ts'
 import { healthRoutes } from './http/routes/health.ts'
 import { meRoutes } from './http/routes/me.ts'
 import { placesRoutes } from './http/routes/places.ts'
+import { reloadRoutes } from './http/routes/reloads.ts'
 import { tripsRoutes } from './http/routes/trips.ts'
 
 export function buildApp() {
@@ -72,6 +73,7 @@ export function buildApp() {
   app.register(directionsRoutes)
   app.register(placesRoutes)
   app.register(tripsRoutes)
+  app.register(reloadRoutes)
 
   return app
 }
