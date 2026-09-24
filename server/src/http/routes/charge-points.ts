@@ -24,7 +24,7 @@ export const chargePointRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/charge-points/nearby',
     {
-      preHandler: requireAuth(),
+      onRequest: requireAuth(),
       schema: {
         tags: ['charge-points'],
         operationId: 'getNearbyChargePoints',
@@ -65,7 +65,7 @@ export const chargePointRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/charge-points/:id',
     {
-      preHandler: requireAuth(),
+      onRequest: requireAuth(),
       schema: {
         tags: ['charge-points'],
         operationId: 'getChargePoint',

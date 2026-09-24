@@ -9,7 +9,8 @@ declare module 'fastify' {
 }
 
 /**
- * preHandler that requires a valid session (401) and, optionally, a role (403).
+ * Hook (use as `onRequest`, before body validation) that requires a valid session
+ * (401) and, optionally, a role (403).
  * On success the session is available as `request.session`.
  */
 export function requireAuth(options: { role?: Role } = {}) {

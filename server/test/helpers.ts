@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto'
-import { sql } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import type { App } from '../src/app.ts'
 import { db } from '../src/db/client.ts'
+import { user } from '../src/db/schema/index.ts'
 
 export async function resetDatabase() {
   await db.execute(
@@ -29,6 +30,13 @@ export async function signUp(app: App, body = makeDriver()) {
   })
 
   return { response, body, cookie: toCookieHeader(response.headers['set-cookie']) }
+}
+
+/** Signs up an account and promotes it to admin, like `npm run create-admin`. */
+export async function signUpAdmin(app: App) {
+  const result = await signUp(app, makeDriver({ name: 'Admin' }))
+  await db.update(user).set({ role: 'admin' }).where(eq(user.email, result.body.email))
+  return result
 }
 
 export function toCookieHeader(setCookie: string | string[] | undefined) {

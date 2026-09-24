@@ -10,6 +10,10 @@ import {
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import { env } from './env.ts'
+import { requireAuth } from './http/require-auth.ts'
+import { adminChargePointRoutes } from './http/routes/admin-charge-points.ts'
+import { adminOverviewRoutes } from './http/routes/admin-overview.ts'
+import { adminPartnerRoutes } from './http/routes/admin-partners.ts'
 import { authRoutes } from './http/routes/auth.ts'
 import { chargePointRoutes } from './http/routes/charge-points.ts'
 import { directionsRoutes } from './http/routes/directions.ts'
@@ -74,6 +78,17 @@ export function buildApp() {
   app.register(placesRoutes)
   app.register(tripsRoutes)
   app.register(reloadRoutes)
+
+  // Admin panel (RF13, RF14): every route under /admin requires the admin role.
+  app.register(
+    async (admin) => {
+      admin.addHook('onRequest', requireAuth({ role: 'admin' }))
+      admin.register(adminOverviewRoutes)
+      admin.register(adminPartnerRoutes)
+      admin.register(adminChargePointRoutes)
+    },
+    { prefix: '/admin' },
+  )
 
   return app
 }

@@ -44,7 +44,7 @@ export const reloadRoutes: FastifyPluginAsyncZod = async (app) => {
   app.post(
     '/reloads',
     {
-      preHandler: requireAuth(),
+      onRequest: requireAuth(),
       schema: {
         tags: ['reloads'],
         operationId: 'createReload',
@@ -106,7 +106,7 @@ export const reloadRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/reloads',
     {
-      preHandler: requireAuth(),
+      onRequest: requireAuth(),
       schema: {
         tags: ['reloads'],
         operationId: 'getReloads',
@@ -158,7 +158,7 @@ export const reloadRoutes: FastifyPluginAsyncZod = async (app) => {
   app.delete(
     '/reloads/:id',
     {
-      preHandler: requireAuth(),
+      onRequest: requireAuth(),
       schema: {
         tags: ['reloads'],
         operationId: 'deleteReload',

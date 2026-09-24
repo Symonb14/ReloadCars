@@ -10,7 +10,7 @@ export const directionsRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/directions',
     {
-      preHandler: requireAuth(),
+      onRequest: requireAuth(),
       schema: {
         tags: ['directions'],
         operationId: 'getDirections',

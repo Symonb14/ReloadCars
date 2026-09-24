@@ -35,7 +35,8 @@ futuro, e o botão de sair do cabeçalho passa para ela.
 - Validação no app antes de enviar: e-mail válido, senha com no mínimo 8 caracteres,
   confirmação igual à senha. Erros da API aparecem em português.
 - Contas `admin` usam o painel web; no app, qualquer perfil pode entrar, mas o conteúdo é
-  o do motorista.
+  o do motorista. Decisão confirmada em 24/09/2026 (após o painel existir): o admin
+  continua podendo usar o app, útil para testá-lo com a mesma conta.
 - Endereço da API em `EXPO_PUBLIC_API_URL` (IP da máquina na rede local durante o
   desenvolvimento, porque o celular não enxerga `localhost`).
 

@@ -21,7 +21,7 @@ export const tripsRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/trips',
     {
-      preHandler: requireAuth(),
+      onRequest: requireAuth(),
       schema: {
         tags: ['trips'],
         operationId: 'getTrip',

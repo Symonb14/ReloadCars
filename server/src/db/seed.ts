@@ -28,7 +28,7 @@ const chargePoints: (typeof chargePoint.$inferInsert)[] = [
     location: { latitude: -19.96873, longitude: -44.19791 },
     powerKw: 22,
     pricePerKwhCents: 180,
-    connectors: ['Tipo 2'],
+    connectors: ['Tipo 2 (tomada)'],
     openingHours: '24 horas',
   },
   {
@@ -41,7 +41,7 @@ const chargePoints: (typeof chargePoint.$inferInsert)[] = [
     location: { latitude: -19.9585, longitude: -44.205 },
     powerKw: 7.4,
     pricePerKwhCents: 120,
-    connectors: ['Tipo 2'],
+    connectors: ['Tipo 2 (tomada)'],
     openingHours: 'Seg. a sáb., 7h às 22h',
   },
   {
@@ -67,7 +67,7 @@ const chargePoints: (typeof chargePoint.$inferInsert)[] = [
     location: { latitude: -19.96608, longitude: -44.21693 },
     powerKw: 22,
     pricePerKwhCents: 199,
-    connectors: ['Tipo 2', 'CCS2'],
+    connectors: ['Tipo 2 (tomada)', 'CCS2'],
     openingHours: '10h às 22h',
   },
 ]

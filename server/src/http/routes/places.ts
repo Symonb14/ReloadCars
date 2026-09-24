@@ -13,7 +13,7 @@ export const placesRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/places/suggestions',
     {
-      preHandler: requireAuth(),
+      onRequest: requireAuth(),
       schema: {
         tags: ['places'],
         operationId: 'getPlaceSuggestions',
@@ -63,7 +63,7 @@ export const placesRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/places/:id',
     {
-      preHandler: requireAuth(),
+      onRequest: requireAuth(),
       schema: {
         tags: ['places'],
         operationId: 'getPlace',
